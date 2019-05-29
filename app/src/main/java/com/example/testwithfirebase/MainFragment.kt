@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.kotlinpermissions.KotlinPermissions
 import kotlinx.android.synthetic.main.fragment_main.*
 import me.dm7.barcodescanner.zxing.ZXingScannerView
 
@@ -37,22 +38,28 @@ class MainFragment : Fragment() {
 
 
         btScan.setOnClickListener{
-            mainActivity?.checkPermission(Manifest.permission.CAMERA,object : MainActivity.OnPermissionListener{
-                override fun onGrantedPermission() {
-                    scanQR()
-                }
-
-                override fun onDeniedPermission() {
-                    Toast.makeText(
-                        activity, "Permission Denied",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-
-            })
+            activity?.let {
+                KotlinPermissions.with(it) // where this is an FragmentActivity instance
+                    .permissions(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.CAMERA)
+                    .onAccepted { permissions ->
+                        scanQR()
+                    }
+                    .onDenied { permissions ->
+                        Toast.makeText(
+                            it, "Permission Denied",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    .onForeverDenied { permissions ->
+                        Toast.makeText(
+                            it, " Forever Denied",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                    .ask()
+            }
 
         }
-
 
     }
     fun scanQR(){
