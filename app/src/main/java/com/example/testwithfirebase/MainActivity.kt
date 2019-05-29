@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
     var onPermissionListener: OnPermissionListener? =null
-    var REQUEST_CODE_ASK_PERMISSIONS = 123
+    var REQUEST_CODE_ASK_PERMISSIONS = 123 // not fix number
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
